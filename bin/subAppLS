@@ -1,0 +1,11 @@
+#!/bin/bash
+echo ""
+echo "subAppLS"
+echo "echoing root's contents"
+echo "User:          $USER"
+echo "User details:  $(id)"
+echo "----------------------"
+ls -la /root
+echo "----------------------"
+echo "subAppLS done"
+echo ""

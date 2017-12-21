@@ -1,0 +1,131 @@
+#!/bin/bash
+echo -e "This is the parent Application\n-------------------------------------------\n\n"
+echo -e "This app will call various applications using polkits for authentication\nWe should not expect to get a popup message unless stated so, here, in this terminal"
+echo -e "--------------------------------------------------"
+echo -e "User Information: (the user executing this 'parentApp')\n"
+echo "User:          $USER"
+echo "User details:  $(id)"
+echo -e "--------------------------------------------------\n"
+echo -e "Press [enter] to continue"
+read
+
+echo -e "Copying over the scripts [subAppLS, subAppPacman] to \'/usr/bin/\'"
+sudo cp "$PWD/subAppLS" "/usr/bin/"
+sudo cp "$PWD/subAppPacman" "/usr/bin/"
+if [[ $? != "0" ]]; then echo "Failed to copy"; fi;
+echo -e "All done, lets us proceed testing. Press [enter] to continue"
+read
+
+# Initial Test
+echo -e "Initial Test\n---------------\n"
+echo -e "Executing subAppLS (this should fail)"
+sleep 2;
+echo "================================================================"
+/usr/bin/subAppLS;
+echo "================================================================"
+echo -e "Executing subAppPacman (this should fail)"
+echo ""
+echo ""
+sleep 2;
+echo "================================================================"
+/usr/bin/subAppPacman;
+echo "================================================================"
+echo -e "Now, lets start using polkits, press [enter] to continue"
+read
+
+# Testing : auth_admin_keep [ALL]
+echo -e "\'auth_admin_keep\' test\n------------------------\n"
+echo -e "Testing policy action \"auth_admin_keep\" on [ALL]"
+echo -e "Copying over \'com.parentapp.auth_admin_keep.policy\' to \'/usr/share/polkit-1/actions/\' using sudo"
+sudo rm "/usr/share/polkit-1/actions/com.parentapp.auth_admin_keep.policy"
+if [[ $? != "0" ]]; then echo "Failed to remove"; fi;
+sudo cp "$PWD/com.parentapp.auth_admin_keep.policy" "/usr/share/polkit-1/actions/com.parentapp.auth_admin_keep.policy"
+if [[ $? != "0" ]]; then echo "Failed to copy"; fi;
+echo -e "Policy copied over, we will test using \"auth_admin_keep\""
+echo -e "Press [enter] to continue"
+read
+
+echo -e "Executing subAppLS using \'pkexec /usr/bin/subAppLS\' (this SHOULD ask for the admin password)"
+sleep 2;
+echo "================================================================"
+pkexec /usr/bin/subAppLS;
+echo "================================================================"
+echo -e "Executing subAppPacman using \'pkexec /usr/bin/subAppPacman\' (this SHOULD NOT ask for the admin password)"
+echo ""
+echo ""
+sleep 2;
+echo "================================================================"
+pkexec /usr/bin/subAppPacman;
+echo "================================================================"
+echo "Press [enter] to continue"
+read
+
+
+
+
+
+
+
+
+# Testing : yes [ALL]
+echo -e "\'yes\' test\n-----------------\n"
+echo -e "Testing policy action \"yes\" on [ALL]"
+echo -e "Copying over \'com.parentapp.yes.policy\' to \'/usr/share/polkit-1/actions/\' using sudo"
+sudo rm "/usr/share/polkit-1/actions/com.parentapp.auth_admin_keep.policy"
+if [[ $? != "0" ]]; then echo "Failed to remove"; fi;
+sudo cp "$PWD/com.parentapp.yes.policy" "/usr/share/polkit-1/actions/com.parentapp.yes.policy"
+if [[ $? != "0" ]]; then echo "Failed to copy"; fi;
+echo -e "Policy copied over, we will test using \"yes\""
+echo -e "Press [enter] to continue"
+read
+
+echo -e "Executing subAppLS using \'pkexec /usr/bin/subAppLS\' (this SHOULD NOT ask for any password)"
+sleep 2;
+echo "================================================================"
+pkexec /usr/bin/subAppLS;
+echo "================================================================"
+echo -e "Executing subAppPacman using \'pkexec /usr/bin/subAppPacman\' (this SHOULD NOT ask for any password)"
+echo ""
+echo ""
+sleep 2;
+echo "================================================================"
+pkexec /usr/bin/subAppPacman;
+echo "================================================================"
+echo "Press [enter] to continue"
+read
+
+
+
+
+
+
+
+
+
+# Testing : auth_admin_keep [active]
+echo -e "\'active_auth_admin_keep\' test\n-------------------------------\n"
+echo -e "Testing policy action \"auth_admin_keep\" on [active] users"
+echo -e "Copying over \'com.parentapp.active_auth_admin_keep.policy\' to \'/usr/share/polkit-1/actions/\' using sudo"
+sudo rm "/usr/share/polkit-1/actions/com.parentapp.yes.policy"
+if [[ $? != "0" ]]; then echo "Failed to remove"; fi;
+sudo cp "$PWD/com.parentapp.active_auth_admin_keep.policy" "/usr/share/polkit-1/actions/com.parentapp.active_auth_admin_keep.policy"
+if [[ $? != "0" ]]; then echo "Failed to copy"; fi;
+echo -e "Policy copied over, we will test using \"auth_admin_keep\" for active users only"
+echo -e "Press [enter] to continue"
+read
+
+echo -e "Executing subAppLS using \'pkexec /usr/bin/subAppLS\' (this SHOULD ask for the admin password)"
+sleep 2;
+echo "================================================================"
+pkexec /usr/bin/subAppLS;
+echo "================================================================"
+echo -e "Executing subAppPacman using \'pkexec /usr/bin/subAppPacman\' (this SHOULD NOT ask for the admin password)"
+echo ""
+echo ""
+sleep 2;
+echo "================================================================"
+pkexec /usr/bin/subAppPacman;
+echo "================================================================"
+
+echo ""
+echo "All done"

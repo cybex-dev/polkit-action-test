@@ -1,0 +1,11 @@
+#!/bin/bash
+echo ""
+echo "subAppPacman"
+echo "Letting pacman update and check for updates"
+echo "User:          $USER"
+echo "User details:  $(id)"
+echo "----------------------"
+pacman -Sy
+echo "----------------------"
+echo "subAppPacman done"
+echo ""
