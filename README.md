@@ -10,7 +10,7 @@ open the file `bin/subAppPacman` and change the line `pacman -Syyu` to that of y
 |-----------------------|---------------------------------|
 | Debian/Ubunut/Mint:   |  ```apt install ${pkgName}```   |
 | Redhat/Fedora/CentOS: |  ```yum install ${pkgName}```   |
-| Arch:                 |  ```pacman -Syu```              |
+| Arch:                 |  ```pacman -Syu ${pkgName}```   |
 
 *Reason for the pacakage manager is this is a confirmed root user action, but it can be replaced with any action requiring root user priviledges*
 
